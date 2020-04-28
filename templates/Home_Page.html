@@ -1,0 +1,33 @@
+<!DOCTYPE html> <!-- Объявление формата документа -->
+<html lang="en">
+    <head> <!-- Техническая информация о документе -->
+        <meta charset="UTF-8"> <!-- Определяем кодировку символов документа -->
+        <title>Forum</title> <!-- Задаем заголовок документа -->
+        <link rel="icon" type="image/png" sizes="32x32" href="/static/img/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/static/img/favicon-16x16.png">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    </head>
+    <body> <!-- Основная часть документа -->
+        <nav class="navbar navbar-light bg-light">
+            <a class="navbar-brand" href="#">
+                <img src="/static/img/ico_48x48.png" width="48" height="48" class="d-inline-block align-top" alt="">
+                Форум питонистов
+            </a>
+            <div>
+                <button type="button" class="btn btn-primary">Регистрация</button>
+                <button type="button" class="btn btn-secondary">Авторизация</button>
+            </div>
+        </nav>
+        <h1><center>НОВОСТИ</center></h1>
+        {% for item in news %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{ item[0] }}</h5>
+                <p class="card-text">{{ item[1] }}</p>
+                <a href="#" class="btn btn-primary">Подробнее...</a>
+            </div>
+        </div>
+        {% endfor %}
+    </body>
+</html>
