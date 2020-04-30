@@ -10,14 +10,18 @@
     </head>
     <body> <!-- Основная часть документа -->
         <nav class="navbar navbar-light bg-light">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="index">
                 <img src="/static/img/ico_48x48.png" width="48" height="48" class="d-inline-block align-top" alt="">
                 Форум питонистов
             </a>
-            <div>
-                <button type="button" class="btn btn-primary">Регистрация</button>
-                <button type="button" class="btn btn-secondary">Авторизация</button>
-            </div>
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Регистрация</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Авторизация</a>
+                </li>
+            </ul>
         </nav>
         <h1><center>НОВОСТИ</center></h1>
         {% for item in news %}
