@@ -30,6 +30,15 @@ def register():
         return "<a class='link' href='index'>Назад на главную</a>"
 
 
+@app.route('/auth', methods=['POST', 'GET'])
+def auth():
+    if request.method == 'GET':
+        return render_template('auth.html')
+    elif request.method == 'POST':
+        request.form['name']
+        return "<a class='link' href='index'>Назад на главную</a>"
+
+
 def main():
     db_session.global_init("db/forum.sqlite")
     app.run()
