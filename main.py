@@ -21,7 +21,7 @@ class RegisterForm(FlaskForm):
     password = PasswordField('Пароль', validators=[DataRequired()])
     password_again = PasswordField('Повторите пароль', validators=[DataRequired()])
     name = StringField('Имя пользователя', validators=[DataRequired()])
-    submit = SubmitField('Войти')
+    submit = SubmitField('Зарегистрироваться')
 
 
 class LoginForm(FlaskForm):
@@ -45,7 +45,7 @@ def index():
         news = session.query(News).filter((News.user == current_user) | (News.is_private != True))
     else:
         news = session.query(News).filter(News.is_private != True)
-    return render_template("index.html", news=news)
+    return render_template("index.html", news=news, title="Форум Питонистов")
 
 
 @app.route('/news', methods=['GET', 'POST'])
