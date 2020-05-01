@@ -1,5 +1,7 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from data import db_session
+from data.news import News
+from data.users import User
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -8,7 +10,24 @@ app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 @app.route('/')
 @app.route('/index')
 def home_page():
-    return render_template('Home_Page.html')
+    session = db_session.create_session()
+    news = session.query(News)
+    return render_template('Home_Page.html', news=news)
+
+
+@app.route('/register', methods=['POST', 'GET'])
+def register():
+    if request.method == 'GET':
+        return render_template('register.html')
+    elif request.method == 'POST':
+        user = User(
+            name=request.form['name'],
+            email=request.form['email'])
+        user.set_password(request.form['password'])
+        session = db_session.create_session()
+        session.add(user)
+        session.commit()
+        return "<a class='link' href='index'>Назад на главную</a>"
 
 
 def main():
