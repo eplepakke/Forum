@@ -9,6 +9,7 @@ from data import db_session
 from flask import Flask, render_template, request
 from data.news import News
 from data.users import User
+from data.comments import Comments
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -38,14 +39,21 @@ class NewsForm(FlaskForm):
     submit = SubmitField('Применить')
 
 
-@app.route("/")
+class CommentForm(FlaskForm):
+    text = TextAreaField("Комментарий", validators=[DataRequired()])
+    submit = SubmitField('Отправить комментарий')
+
+
+@app.route("/", methods=['GET', 'POST'])
 def index():
     session = db_session.create_session()
+    form = CommentForm()
     if current_user.is_authenticated:
         news = session.query(News).filter((News.user == current_user) | (News.is_private != True))
     else:
         news = session.query(News).filter(News.is_private != True)
-    return render_template("index.html", news=news, title="Форум Питонистов")
+    comments = session.query(Comments).filter()
+    return render_template("index.html", news=news, comments=comments, form=form, title="Форум Питонистов")
 
 
 @app.route('/news', methods=['GET', 'POST'])
