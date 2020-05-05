@@ -2,7 +2,7 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 from flask_wtf import FlaskForm
 from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
-from wtforms import PasswordField, StringField, SubmitField, TextAreaField, BooleanField
+from wtforms import PasswordField, StringField, SubmitField, TextAreaField, BooleanField, HiddenField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired
 from data import db_session
@@ -41,6 +41,7 @@ class NewsForm(FlaskForm):
 
 class CommentForm(FlaskForm):
     text = TextAreaField("Комментарий", validators=[DataRequired()])
+    news_id = HiddenField()
     submit = SubmitField('Отправить комментарий')
 
 
@@ -53,6 +54,14 @@ def index():
     else:
         news = session.query(News).filter(News.is_private != True)
     comments = session.query(Comments).filter()
+    if form.validate_on_submit():
+        comment = Comments()
+        comment.text = form.text.data
+        comment.news_id = int(form.news_id.raw_data[1])
+        current_user.comment.append(comment)
+        session.merge(current_user)
+        session.commit()
+        return redirect('/')
     return render_template("index.html", news=news, comments=comments, form=form, title="Форум Питонистов")
 
 

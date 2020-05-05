@@ -14,6 +14,7 @@ class User(SqlAlchemyBase, UserMixin):
     email = sqlalchemy.Column(sqlalchemy.String, index=True, unique=True, nullable=True)
     hashed_password = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     news = orm.relation("News", back_populates='user')
+    comment = orm.relation('Comments', back_populates='user')
 
     def set_password(self, password):
         self.hashed_password = generate_password_hash(password)
