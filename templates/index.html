@@ -70,16 +70,54 @@
         {%for comment in comments%}
         {% if comment.news_id == item.id %}
         <!-- Медиа объект для комментариев -->
-        <div class="media">
-            <img src="/static/img/user_avatar.png" width="64" height="64" class="align-self-center mr-3" alt="">
-            <div class="media-body">
-                <h5 class="mt-0">{{ comment.user.name }}</h5>
-                <p>{{ comment.text }}</p>
-                <p class="text-muted">{{ comment.comment_date }}</p>
+        <form action="" method="post" novalidate>
+            {{ form_del.hidden_tag() }}
+            {{ form_del.csrf_token }}
+            <div class="media">
+                <img src="/static/img/user_avatar.png" width="64" height="64" class="align-self-center mr-3" alt="">
+                <div class="media-body">
+                    <h5 class="mt-0">{{ comment.user.name }}</h5>
+                    <p>{{ comment.text }}</p>
+                    <p class="text-muted">{{ comment.comment_date }}</p>
+                </div>
+                {% if current_user.is_authenticated and current_user == comment.user %}
+                <button type="button" class="btn btn-danger" data-toggle="modal"
+                        data-target="#CommentDelete{{comment.id}}">
+                    ×
+                </button>
+                <form action="" method="post" novalidate>
+                    {{ form_del.hidden_tag() }}
+                    {{ form_del.csrf_token }}
+                    <div class="modal fade" id="CommentDelete{{comment.id}}" tabindex="-1" role="dialog"
+                         aria-labelledby="CommentDelete{{comment.id}}Title" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="CommentDelete{{comment.id}}Title">
+                                        Удаление комментария
+                                    </h5>
+                                    <p>
+                                        {{form_del.comment_id(class="form-control", value=comment.id)}}
+                                    </p>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Вы уверены что хотите удалить комментарий?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                                    <p>{{form_del.submit(type="submit", class="btn btn-danger")}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                {% endif %}
             </div>
-        </div>
-        {% endif %}
-        {% endfor %}
+            {% endif %}
+            {% endfor %}
     </div>
 </div>
 {% endfor %}

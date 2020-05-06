@@ -45,15 +45,23 @@ class CommentForm(FlaskForm):
     submit = SubmitField('Отправить комментарий')
 
 
+class CommentDelete(FlaskForm):
+    comment_id = HiddenField()
+    submit = SubmitField("Удалить")
+
+
 @app.route("/", methods=['GET', 'POST'])
 def index():
     session = db_session.create_session()
-    form = CommentForm()
+    # Отображение новостей
     if current_user.is_authenticated:
         news = session.query(News).filter((News.user == current_user) | (News.is_private != True))
     else:
         news = session.query(News).filter(News.is_private != True)
+    # Отображение комментариев
     comments = session.query(Comments).filter()
+    # Форма для добавления комментария
+    form = CommentForm()
     if form.validate_on_submit():
         comment = Comments()
         comment.text = form.text.data
@@ -62,7 +70,18 @@ def index():
         session.merge(current_user)
         session.commit()
         return redirect('/')
-    return render_template("index.html", news=news, comments=comments, form=form, title="Форум Питонистов")
+    # Форма для удаления комментария
+    delete_form = CommentDelete()
+    if delete_form.validate_on_submit() and current_user.is_authenticated:
+        comm = session.query(Comments).filter(Comments.id == int(delete_form.comment_id.raw_data[2])).first()
+        if comm:
+            session.delete(comm)
+            session.commit()
+        else:
+            abort(404)
+        return redirect('/')
+    return render_template("index.html", news=news, comments=comments, form=form, form_del=delete_form,
+                           title="Форум Питонистов")
 
 
 @app.route('/news', methods=['GET', 'POST'])
