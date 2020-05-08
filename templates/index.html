@@ -70,7 +70,6 @@
         {%for comment in comments%}
         {% if comment.news_id == item.id %}
         <!-- Медиа объект для комментариев -->
-        <form action="" method="post" novalidate>
             {{ form_del.hidden_tag() }}
             {{ form_del.csrf_token }}
             <div class="media">
