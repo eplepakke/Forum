@@ -65,7 +65,7 @@ def index():
     if form.validate_on_submit():
         comment = Comments()
         comment.text = form.text.data
-        comment.news_id = int(form.news_id.raw_data[1])
+        comment.news_id = int(''.join(form.news_id.raw_data))
         current_user.comment.append(comment)
         session.merge(current_user)
         session.commit()
@@ -73,7 +73,7 @@ def index():
     # Форма для удаления комментария
     delete_form = CommentDelete()
     if delete_form.validate_on_submit() and current_user.is_authenticated:
-        comm = session.query(Comments).filter(Comments.id == int(delete_form.comment_id.raw_data[2])).first()
+        comm = session.query(Comments).filter(Comments.id == int(''.join(delete_form.comment_id.raw_data))).first()
         if comm:
             session.delete(comm)
             session.commit()
